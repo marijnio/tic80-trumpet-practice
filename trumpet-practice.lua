@@ -79,8 +79,8 @@ local function print(str, x, y, col)
   str = str:gsub("\145", "R")
   str = str:gsub("\148", "U")
   str = str:gsub("\153", "D")
-  str = str:gsub("\151", "B")
-  str = str:gsub("\142", "A")
+  str = str:gsub("\151", "A")
+  str = str:gsub("\142", "B")
   
   _print(str, x, y, c(col), false, 1, false)
 end
@@ -91,8 +91,8 @@ local BTN_MAP = {
   [1] = 3, -- Right -> Right (3)
   [2] = 0, -- Up -> Up (0)
   [3] = 1, -- Down -> Down (1)
-  [4] = 4, -- Button O -> Button A (4)
-  [5] = 5, -- Button X -> Button B (5)
+  [4] = 5, -- Button O -> Button B (5) (Going Back)
+  [5] = 4, -- Button X -> Button A (4) (Confirming/Selecting)
 }
 
 local function btn(i)
@@ -586,9 +586,9 @@ function _draw()
     print(">", arrow_x, sel_y, 8) -- selection arrow
 
     if menu_opt <= 3 then
-      print("press B to start", 72, 108, 1)
+      print("press A to start", 72, 108, 1)
     else
-      print("adjust: L/R or press B", 54, 108, 1)
+      print("adjust: L/R or press A", 54, 108, 1)
     end
     draw_elephant(216, 126, true, true, true)
     return
@@ -699,31 +699,31 @@ function _draw()
   -- ui contextual instructions
   if state == "quiz" then
     print("L/D/R:valves  Up:cycle air", 42, 118, 6)
-    print("B:submit  A:quit", 72, 126, 7)
+    print("A:submit  B:quit", 72, 126, 7)
   elseif state == "result" then
     if is_correct then
       rectfill(0, 116, 240, 136, 11)
       print("correct!", 96, 118, 0)
-      print("B:next  A:quit", 78, 126, 0)
+      print("A:next  B:quit", 78, 126, 0)
     else
       rectfill(0, 116, 240, 136, 8)
       print("wrong! correct shown", 60, 118, 7)
-      print("B:next  A:quit", 78, 126, 7)
+      print("A:next  B:quit", 78, 126, 7)
     end
   elseif state == "reference" then
     if ref_flavor == "list" then
-      print("L/R:navigate  B:play note", 45, 118, 6)
-      print("press A for menu", 72, 126, 7)
+      print("L/R:navigate  A:play note", 45, 118, 6)
+      print("press B for menu", 72, 126, 7)
     elseif ref_flavor == "valves" then
       print("L/D/R:valves  Up:cycle air", 42, 118, 6)
-      print("B:play note  A:quit", 63, 126, 7)
+      print("A:play note  B:quit", 63, 126, 7)
     else
       -- sticky
       print("hold L/D/R:valves  Up:cycle air", 27, 118, 6)
-      print("B:play note  A:quit", 63, 126, 7)
+      print("A:play note  B:quit", 63, 126, 7)
     end
   elseif state == "play_along" then
-    print("press A to exit", 75, 14, 6)
+    print("press B to exit", 75, 14, 6)
 
     local beat_len = flr(3600 / tempo)
     local beat = flr(play_along_timer / beat_len) + 1

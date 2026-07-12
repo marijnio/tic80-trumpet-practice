@@ -27,16 +27,16 @@ This tool helps trumpet players practice both **valve fingerings** and **air pre
 
 ## 🎮 Handheld & Emulator Controls
 
-Since the application is designed to be played on handheld retro consoles (like the ANBERNIC RG35XXSP) and desktop computers, the controls are mapped to PICO-8 standard inputs:
+Since the application is designed to be played on handheld retro consoles (like the ANBERNIC RG35XXSP) and desktop computers, the controls are mapped to the TIC-80 standard inputs:
 
-| PICO-8 Input | Desktop Key | Handheld Button | Menu / Reference Action | Quiz Mode Action |
+| TIC-80 Input | Desktop Key | Handheld Button | Menu / Reference Action | Quiz Mode Action |
 |---|---|---|---|---|
 | **Left** | `Left Arrow` | **D-Pad Left** | Adjust settings (on menu) / Navigate Reference (Prev) | Toggle **Valve 1** (1st valve) |
 | **Right** | `Right Arrow` | **D-Pad Right** | Adjust settings (on menu) / Navigate Reference (Next) | Toggle **Valve 3** (3rd valve) |
 | **Up** | `Up Arrow` | **D-Pad Up** | Move Selection Up | Cycle **Air Pressure** (1 to 5) |
 | **Down** | `Down Arrow` | **D-Pad Down** | Move Selection Down | Toggle **Valve 2** (2nd valve) |
-| **Button 4 (🅾️)** | `Z` / `C` | **A** | Return to Menu | **Quit / Return to Menu** |
-| **Button 5 (❎)** | `X` / `V` | **B** | Confirm / Select (on menu) / Hold to play note (in Reference) | **Submit Answer** (in Quiz) / **Continue** (in Result) |
+| **Button A** | `Z` / `C` | **A** | Confirm / Select (on menu) / Hold to play note (in Reference) | **Submit Answer** (in Quiz) / **Continue** (in Result) |
+| **Button B** | `X` / `V` | **B** | Return to Menu / Back | **Quit / Return to Menu** |
 
 > [!NOTE]
 > **Adjusting Air Pressure in Quiz Mode:** To change the air level indicator on the right side of the screen, simply press **D-Pad Up** to cycle through air pressure levels 1–5.
