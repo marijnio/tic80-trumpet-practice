@@ -815,30 +815,74 @@ function draw_valves(start_x, y)
     -- draw slides
     if i == 1 then
       if slide_1_out then
-        rect(vx - 10, y + 1, vx - 2, y + 5, 6)
+        rectfill(vx - 14, y + 2, vx - 3, y + 9, 6) -- extended slide (light gray)
+        rect(vx - 14, y + 2, vx - 3, y + 9, 5) -- dark outline
+        rectfill(vx - 12, y + 4, vx - 3, y + 7, 1) -- hollow center (bg)
+        rect(vx - 17, y + 4, vx - 15, y + 7, 6) -- thumb saddle
       else
-        rect(vx - 6, y + 1, vx - 2, y + 5, 5)
+        rectfill(vx - 8, y + 2, vx - 3, y + 9, 5) -- retracted slide (dark gray)
+        rect(vx - 8, y + 2, vx - 3, y + 9, 0) -- black outline
+        rectfill(vx - 6, y + 4, vx - 3, y + 7, 1) -- hollow center (bg)
       end
     elseif i == 3 then
       if slide_3_out then
-        rect(vx + 10, y + 1, vx + 18, y + 5, 6)
+        rectfill(vx + 11, y + 2, vx + 22, y + 9, 6) -- extended slide (light gray)
+        rect(vx + 11, y + 2, vx + 22, y + 9, 5) -- dark outline
+        rectfill(vx + 11, y + 4, vx + 20, y + 7, 1) -- hollow center (bg)
+        rect(vx + 22, y + 4, vx + 24, y + 7, 6) -- finger ring
       else
-        rect(vx + 10, y + 1, vx + 14, y + 5, 5)
+        rectfill(vx + 11, y + 2, vx + 16, y + 9, 5) -- retracted slide (dark gray)
+        rect(vx + 11, y + 2, vx + 16, y + 9, 0) -- black outline
+        rectfill(vx + 11, y + 4, vx + 14, y + 7, 1) -- hollow center (bg)
       end
     end
 
-    rect(vx - 2, y - 8, vx + 10, y + 12, 5)
+    -- Calculate piston and button positions
+    local button_top, stem_top, button_color
     if not reveal then
-      rectfill(vx, y, vx + 8, y + 8, 5)
-      print("?", vx + 3, y + 2, 7)
+      button_top = y - 10
+      stem_top = y - 7
+      button_color = 5 -- dark gray mystery cap
     else
       if active then
-        rectfill(vx, y, vx + 8, y + 8, 12)
-        print(i, vx + 3, y + 2, 0)
+        button_top = y - 5
+        stem_top = y - 2
+        button_color = 12 -- sky blue active cap
       else
-        rect(vx, y, vx + 8, y + 8, 7)
-        print(i, vx + 3, y + 2, 7)
+        button_top = y - 10
+        stem_top = y - 7
+        button_color = 7 -- white inactive cap
       end
+    end
+
+    -- 1. Draw Piston Stem (rod)
+    rectfill(vx + 3, stem_top, vx + 5, y - 2, 6) -- light/medium gray rod
+    rect(vx + 3, stem_top, vx + 5, y - 2, 5) -- dark gray outline
+
+    -- 2. Draw Finger Button (cap)
+    rectfill(vx - 2, button_top, vx + 10, button_top + 2, button_color) -- cap
+    rect(vx - 2, button_top, vx + 10, button_top + 2, 5) -- cap outline
+
+    -- 3. Draw Casing body and caps
+    -- Casing Body
+    rectfill(vx - 3, y + 1, vx + 11, y + 10, 10) -- gold/brass casing
+    rect(vx - 3, y + 1, vx + 11, y + 10, 5) -- dark gray outline
+    line(vx - 2, y + 2, vx - 2, y + 9, 7) -- white highlight shine
+
+    -- Casing Top Cap/Collar
+    rectfill(vx - 4, y - 2, vx + 12, y, 10)
+    rect(vx - 4, y - 2, vx + 12, y, 5)
+
+    -- Casing Bottom Cap
+    rectfill(vx - 4, y + 11, vx + 12, y + 12, 10)
+    rect(vx - 4, y + 11, vx + 12, y + 12, 5)
+
+    -- 4. Print Valve Number/Status
+    if not reveal then
+      print("?", vx + 2, y + 3, 7)
+    else
+      local num_color = active and 0 or 5 -- black if active, dark gray if inactive
+      print(i, vx + 2, y + 3, num_color)
     end
   end
 end
