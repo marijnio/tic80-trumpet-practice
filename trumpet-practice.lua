@@ -698,29 +698,29 @@ function _draw()
 
   -- ui contextual instructions
   if state == "quiz" then
-    print("L/D/R:valves  Up:cycle air", 42, 118, 6)
-    print("A:submit  B:quit", 72, 126, 7)
+    print("L/D/R: valves  Up: cycle air", 36, 118, 6)
+    print("A: submit  B: quit", 66, 126, 7)
   elseif state == "result" then
     if is_correct then
       rectfill(0, 116, 240, 136, 11)
       print("correct!", 96, 118, 0)
-      print("A:next  B:quit", 78, 126, 0)
+      print("A: next  B: quit", 72, 126, 0)
     else
       rectfill(0, 116, 240, 136, 8)
       print("wrong! correct shown", 60, 118, 7)
-      print("A:next  B:quit", 78, 126, 7)
+      print("A: next  B: quit", 72, 126, 7)
     end
   elseif state == "reference" then
     if ref_flavor == "list" then
-      print("L/R:navigate  A:play note", 45, 118, 6)
+      print("L/R: navigate  A: play note", 39, 118, 6)
       print("press B for menu", 72, 126, 7)
     elseif ref_flavor == "valves" then
-      print("L/D/R:valves  Up:cycle air", 42, 118, 6)
-      print("A:play note  B:quit", 63, 126, 7)
+      print("L/D/R: valves  Up: cycle air", 36, 118, 6)
+      print("A: play note  B: quit", 57, 126, 7)
     else
       -- sticky
-      print("hold L/D/R:valves  Up:cycle air", 27, 118, 6)
-      print("A:play note  B:quit", 63, 126, 7)
+      print("hold L/D/R: valves  Up: cycle air", 21, 118, 6)
+      print("A: play note  B: quit", 57, 126, 7)
     end
   elseif state == "play_along" then
     print("press B to exit", 75, 14, 6)
