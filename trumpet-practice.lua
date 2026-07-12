@@ -211,6 +211,7 @@ function _init()
   is_correct = false
   user_v = { false, false, false }
   user_air = 2
+  result_timer = 0
 
   -- play-along state variables
   play_along_timer = 0
@@ -495,6 +496,7 @@ function _update()
       end
       local p = is_bb and note.p - 2 or note.p
       play_pitch(p)
+      result_timer = 0
       state = "result"
     end
   elseif state == "result" then
@@ -506,6 +508,15 @@ function _update()
       stop_pitch()
       pick_new_note()
       state = "quiz"
+    end
+
+    if not is_correct and result_timer and result_timer >= 0 then
+      result_timer = result_timer + 1
+      local half_measure = flr(7200 / tempo)
+      if result_timer >= half_measure then
+        stop_pitch()
+        result_timer = -1
+      end
     end
   elseif state == "play_along" then
     if btnp(4) then
