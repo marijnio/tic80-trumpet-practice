@@ -1,8 +1,8 @@
-# PICO-8 Trumpet Fingering & Partial Trainer
+# TIC-80 Trumpet Fingering Trainer
 
-An interactive, game-like educational application for the **PICO-8 fantasy console**, specifically designed and optimized for retro handheld devices (such as the **ANBERNIC RG35XXSP**, Miyoo Mini, and similar devices) as well as desktop emulators and web players.
+An interactive, game-like educational application for the **TIC-80 fantasy computer**, specifically designed and optimized for retro handheld devices (such as the **ANBERNIC RG35XXSP**, Miyoo Mini, and similar devices) as well as desktop emulators and web players.
 
-This tool helps trumpet players practice both **valve fingerings** and **air pressure partials** (representing embouchure and pitch targeting) across a chromatic range of 26 notes (from F#3 to G5) using a randomized practice engine.
+This tool helps trumpet players practice **valve fingerings** and associate them with correct **air pressure partials** (representing embouchure and pitch targeting) across a chromatic range of 26 notes (from F#3 to G5) using a randomized practice engine.
 
 ---
 
@@ -14,9 +14,10 @@ This tool helps trumpet players practice both **valve fingerings** and **air pre
   * **Valves:** Simulates the three physical trumpet valves.
   * **Air Pressure / Partials:** Simulates embouchure and air speed requirements by dividing notes into 5 air levels (harmonic partial groups).
 * **Smart Repetition (Practice Mode):** Utilizes a lightweight Spaced Repetition System (SRS) with a live mastery percentage display (e.g. `srs: 83%`). Incorrectly answered notes double in weight (making them appear more frequently), while correct answers halve in weight to prevent redundant drill.
+  * *Ear Training on Mistake:* If you submit an incorrect fingering, the trainer plays a short failure chime and then sounds the correct trumpet pitch for exactly **half a measure** (calculated dynamically based on your menu tempo setting) to help train your ear before stopping automatically.
 * **Randomized progression (Play-Along Mode):** Notes are chosen randomly from the selection pool to provide a diverse, hands-free playing session.
 * **Three Flexible Modes:** 
-  * **Quiz Mode:** Tests your recall of both valve fingerings and air pressure levels using interactive controls on the device.
+  * **Quiz Mode (Practice):** Tests your recall of valve fingerings. The target air pressure level is automatically shown as a reference, letting you focus entirely on correct fingerings.
   * **Play-Along Mode (Hands-Free):** Specifically designed for practicing with your **actual trumpet** in hand. It guides you rhythmically using audio metronome clicks and pitches.
   * **Reference Mode:** Allows you to browse through notes or explore combinations. You can choose between three flavors on the main menu:
     * **List Flavor:** Chronologically browse through all 26 notes from low to high to review correct fingerings and air levels.
@@ -33,19 +34,16 @@ Since the application is designed to be played on handheld retro consoles (like 
 |---|---|---|---|---|
 | **Left** | `Left Arrow` | **D-Pad Left** | Adjust settings (on menu) / Navigate Reference (Prev) | Toggle **Valve 1** (1st valve) |
 | **Right** | `Right Arrow` | **D-Pad Right** | Adjust settings (on menu) / Navigate Reference (Next) | Toggle **Valve 3** (3rd valve) |
-| **Up** | `Up Arrow` | **D-Pad Up** | Move Selection Up | Cycle **Air Pressure** (1 to 5) |
+| **Up** | `Up Arrow` | **D-Pad Up** | Move Selection Up | - |
 | **Down** | `Down Arrow` | **D-Pad Down** | Move Selection Down | Toggle **Valve 2** (2nd valve) |
 | **Button A** | `Z` / `C` | **A** | Confirm / Select (on menu) / Hold to play note (in Reference) | **Submit Answer** (in Quiz) / **Continue** (in Result) |
 | **Button B** | `X` / `V` | **B** | Return to Menu / Back | **Quit / Return to Menu** |
-
-> [!NOTE]
-> **Adjusting Air Pressure in Quiz Mode:** To change the air level indicator on the right side of the screen, simply press **D-Pad Up** to cycle through air pressure levels 1–5.
 
 ---
 
 ## 🥁 Hands-Free Play-Along Mode
 
-The **Play-Along Mode** is designed for practice sessions where you are holding and playing a physical trumpet. Because you cannot easily press valve combinations on the PICO-8 device while playing, this mode runs on a continuous **12-beat loop** (which is 12 seconds total per note at 60 BPM, scaling dynamically based on the configured menu tempo):
+The **Play-Along Mode** is designed for practice sessions where you are holding and playing a physical trumpet. Because you cannot easily press valve combinations on the console device while playing, this mode runs on a continuous **12-beat loop** (which scales dynamically based on the configured menu tempo):
 
 1. **Prepare Phase (Beats 1-4):**
    * The staff displays the target note.
@@ -63,7 +61,7 @@ The **Play-Along Mode** is designed for practice sessions where you are holding 
 
 ### Hands-Free Flow:
 - **Automatic progression:** At the end of the 12 beats, the system automatically marks the note as completed (adding to your score) and moves to the next note.
-- **Exiting:** Press the **🅾️ button (Z/C key)** at any time to immediately stop the pitch drone and return to the main menu.
+- **Exiting:** Press the **Button B (X/V key)** at any time to immediately stop the pitch drone and return to the main menu.
 
 ---
 
@@ -92,12 +90,12 @@ To make your practice sessions more encouraging, **Ellie the Elephant** acts as 
 
 To install this cart on your ANBERNIC RG35XXSP or other devices running CFW (like Knulli, MuOS, or MinUI):
 
-1. **Locate your ROMs folder:** Connect your SD card to your computer and navigate to the `roms/pico8/` directory.
-2. **Copy the file:** Copy the `main.p8` cart (or rename it to `pico-trumpet-practice.p8`) into the directory.
+1. **Locate your ROMs folder:** Connect your SD card to your computer and navigate to the `roms/tic80/` directory.
+2. **Copy the file:** Copy the `trumpet-practice.tic` file into the directory.
 3. **Execute:** 
-   * Launch your device, refresh your game list, and select **PICO-8** / **pico-trumpet-practice**.
-   * Alternatively, if using the official PICO-8 binary under the hood, place it in your carts folder and load it in the console command line using:
+   * Launch your device, refresh your game list, and select **TIC-80** / **trumpet-practice**.
+   * Alternatively, if using the TIC-80 console directly, load the cart and run it:
      ```text
-     load pico-trumpet-practice.p8
+     load trumpet-practice.tic
      run
      ```
