@@ -466,11 +466,6 @@ function _update()
   elseif state == "quiz" then
     if btnp(0) then user_v[1] = not user_v[1] end
     if btnp(1) then user_v[3] = not user_v[3] end
-
-    if btnp(2) then
-      user_air = user_air + 1
-      if user_air > 5 then user_air = 1 end
-    end
     if btnp(3) then user_v[2] = not user_v[2] end
 
     if btnp(4) then
@@ -482,9 +477,8 @@ function _update()
       local valves_correct = user_v[1] == note.v[1]
           and user_v[2] == note.v[2]
           and user_v[3] == note.v[3]
-      local air_correct = user_air == note.air
 
-      if valves_correct and air_correct then
+      if valves_correct then
         is_correct = true
         score = score + 1
         sfx(0)
@@ -709,7 +703,7 @@ function _draw()
 
   -- ui contextual instructions
   if state == "quiz" then
-    print("L/D/R: valves  Up: cycle air", 36, 118, 6)
+    print("L/D/R: valves", 81, 118, 6)
     print("A: submit  B: quit", 66, 126, 7)
   elseif state == "result" then
     if is_correct then
@@ -862,7 +856,10 @@ function draw_air()
   local col = 12
 
   local reveal = true
-  if state == "play_along" then
+  if state == "quiz" then
+    active_air = draw_note.air
+    col = 11
+  elseif state == "play_along" then
     local beat_len = flr(3600 / tempo)
     local beat = flr(play_along_timer / beat_len) + 1
     if beat <= 8 then
