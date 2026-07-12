@@ -19,10 +19,11 @@ This tool helps trumpet players practice **valve fingerings** and associate them
 * **Three Flexible Modes:** 
   * **Quiz Mode (Practice):** Tests your recall of valve fingerings. The target air pressure level is automatically shown as a reference, letting you focus entirely on correct fingerings.
   * **Play-Along Mode (Hands-Free):** Specifically designed for practicing with your **actual trumpet** in hand. It guides you rhythmically using audio metronome clicks and pitches.
-  * **Reference Mode:** Allows you to browse through notes or explore combinations. You can choose between three flavors on the main menu:
+  * **Reference Mode:** Allows you to browse through notes or explore combinations. You can choose between four flavors on the main menu:
     * **List Flavor:** Chronologically browse through all 26 notes from low to high to review correct fingerings and air levels.
     * **Valves Flavor:** Actively configure the valves and air levels to explore sound pitches interactively (taps toggle valves on/off).
-    * **Sticky Flavor:** Valves are registered as real-time button holds (spring-return) rather than toggles—simulating a real trumpet's valve action. Pressing buttons changes the note instantly while you hold the play button.
+    * **Sticky Flavor:** Valves are registered as real-time D-pad button holds (spring-return) rather than toggles. Pressing buttons changes the note instantly while you hold the play button (Note: may be physically limited on some D-pads).
+    * **Alt Sticky Flavor (Alt Sticky):** Designed specifically for handheld gamepads. Maps the valves to face buttons (X = Valve 1, A = Valve 2, B = Valve 3) to allow simultaneous 3-valve holds, while holding D-pad Down/Left/Right acts as the "Blow/Play" trigger, D-pad Up cycles the air level, and Button Y (or holding D-pad Up) exits to the menu.
 
 ---
 

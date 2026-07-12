@@ -212,6 +212,7 @@ function _init()
   user_v = { false, false, false }
   user_air = 2
   result_timer = 0
+  exit_timer = 0
 
   -- play-along state variables
   play_along_timer = 0
@@ -315,17 +316,21 @@ function _update()
     if menu_opt == 3 then
       if btnp(0) then
         if ref_flavor == "list" then
-          ref_flavor = "sticky"
+          ref_flavor = "alt_sticky"
         elseif ref_flavor == "valves" then
           ref_flavor = "list"
-        else
+        elseif ref_flavor == "sticky" then
           ref_flavor = "valves"
+        else
+          ref_flavor = "sticky"
         end
       elseif btnp(1) then
         if ref_flavor == "list" then
           ref_flavor = "valves"
         elseif ref_flavor == "valves" then
           ref_flavor = "sticky"
+        elseif ref_flavor == "sticky" then
+          ref_flavor = "alt_sticky"
         else
           ref_flavor = "list"
         end
@@ -375,6 +380,7 @@ function _update()
         ref_idx = 1
         ref_v = { false, false, false }
         ref_air = 1
+        exit_timer = 0
       end
     end
   elseif state == "reference" then
@@ -409,8 +415,23 @@ function _update()
         end
       end
     else
-      -- valves or sticky mode
-      if ref_flavor == "sticky" then
+      -- valves, sticky, or alt_sticky mode
+      local ref_playing_alt = false
+      if ref_flavor == "alt_sticky" then
+        -- Valve 1 = X (6), Valve 2 = A (4), Valve 3 = B (5)
+        ref_v[1] = _btn(6)
+        ref_v[2] = _btn(4)
+        ref_v[3] = _btn(5)
+
+        -- D-pad Up (0) cycles air pressure
+        if _btnp(0) then
+          ref_air = ref_air + 1
+          if ref_air > 5 then ref_air = 1 end
+        end
+
+        -- Blow/Play if holding D-pad Down (1), Left (2), or Right (3)
+        ref_playing_alt = _btn(1) or _btn(2) or _btn(3)
+      elseif ref_flavor == "sticky" then
         ref_v[1] = btn(0)
         ref_v[3] = btn(1)
         ref_v[2] = btn(3)
@@ -430,7 +451,29 @@ function _update()
         if btnp(3) then ref_v[2] = not ref_v[2] end
       end
 
-      if btnp(4) then
+      local should_exit = false
+      if ref_flavor == "alt_sticky" then
+        if _btnp(7) then -- Y button
+          should_exit = true
+        end
+
+        -- Hold D-pad Up (0) for 45 frames to exit
+        if _btn(0) then
+          exit_timer = (exit_timer or 0) + 1
+          if exit_timer >= 45 then
+            should_exit = true
+            exit_timer = 0
+          end
+        else
+          exit_timer = 0
+        end
+      else
+        if btnp(4) then
+          should_exit = true
+        end
+      end
+
+      if should_exit then
         stop_pitch()
         ref_playing = false
         playing_p = nil
@@ -441,7 +484,14 @@ function _update()
       local p = get_pitch(ref_v, ref_air)
       local found = find_note_by_pitch(p)
 
-      if btn(5) then
+      local is_playing_ref = false
+      if ref_flavor == "alt_sticky" then
+        is_playing_ref = ref_playing_alt
+      else
+        is_playing_ref = btn(5)
+      end
+
+      if is_playing_ref then
         if found then
           if not ref_playing then
             local pitch_val = is_bb and found.p - 2 or found.p
@@ -722,10 +772,13 @@ function _draw()
     elseif ref_flavor == "valves" then
       print("L/D/R: valves  Up: cycle air", 36, 118, 6)
       print("A: play note  B: quit", 57, 126, 7)
-    else
-      -- sticky
+    elseif ref_flavor == "sticky" then
       print("hold L/D/R: valves  Up: cycle air", 21, 118, 6)
       print("A: play note  B: quit", 57, 126, 7)
+    else
+      -- alt_sticky
+      print("hold X/A/B: valves  Up: cycle air", 21, 118, 6)
+      print("hold L/D/R to play  Y: quit", 39, 126, 7)
     end
   elseif state == "play_along" then
     print("press B to exit", 75, 14, 6)
