@@ -790,7 +790,14 @@ function draw_valves(start_x, y)
 
   local slide_1_out = false
   local slide_3_out = false
-  if draw_note then
+  local show_slides = true
+  if state == "quiz" then
+    show_slides = false
+  elseif state == "play_along" and not reveal then
+    show_slides = false
+  end
+
+  if show_slides and draw_note then
     local name = draw_note.name
     if name == "f#3" or name == "g3" or name == "c#4" or name == "d4" then
       slide_3_out = true
