@@ -204,6 +204,7 @@ function _init()
   ref_v = { false, false, false }
   ref_air = 1
   playing_p = nil
+  quiz_input_mode = "toggle"
 
   -- practice state variables
   score = 0
@@ -313,16 +314,22 @@ function _update()
     if btnp(2) then menu_opt = max(1, menu_opt - 1) end
     if btnp(3) then menu_opt = min(7, menu_opt + 1) end
 
-    if menu_opt == 3 then
+    if menu_opt == 1 then
+      if btnp(0) or btnp(1) then
+        if quiz_input_mode == "toggle" then
+          quiz_input_mode = "sticky"
+        else
+          quiz_input_mode = "toggle"
+        end
+      end
+    elseif menu_opt == 3 then
       if btnp(0) then
         if ref_flavor == "list" then
-          ref_flavor = "alt_sticky"
+          ref_flavor = "sticky"
         elseif ref_flavor == "valves" then
           ref_flavor = "list"
         elseif ref_flavor == "sticky" then
           ref_flavor = "valves"
-        else
-          ref_flavor = "sticky"
         end
       elseif btnp(1) then
         if ref_flavor == "list" then
@@ -330,8 +337,6 @@ function _update()
         elseif ref_flavor == "valves" then
           ref_flavor = "sticky"
         elseif ref_flavor == "sticky" then
-          ref_flavor = "alt_sticky"
-        else
           ref_flavor = "list"
         end
       end
@@ -415,23 +420,8 @@ function _update()
         end
       end
     else
-      -- valves, sticky, or alt_sticky mode
-      local ref_playing_alt = false
-      if ref_flavor == "alt_sticky" then
-        -- Valve 1 = X (6), Valve 2 = A (4), Valve 3 = B (5)
-        ref_v[1] = _btn(6)
-        ref_v[2] = _btn(4)
-        ref_v[3] = _btn(5)
-
-        -- D-pad Up (0) cycles air pressure
-        if _btnp(0) then
-          ref_air = ref_air + 1
-          if ref_air > 5 then ref_air = 1 end
-        end
-
-        -- Blow/Play if holding D-pad Down (1), Left (2), or Right (3)
-        ref_playing_alt = _btn(1) or _btn(2) or _btn(3)
-      elseif ref_flavor == "sticky" then
+      -- valves or sticky mode
+      if ref_flavor == "sticky" then
         ref_v[1] = btn(0)
         ref_v[3] = btn(1)
         ref_v[2] = btn(3)
@@ -451,29 +441,7 @@ function _update()
         if btnp(3) then ref_v[2] = not ref_v[2] end
       end
 
-      local should_exit = false
-      if ref_flavor == "alt_sticky" then
-        if _btnp(7) then -- Y button
-          should_exit = true
-        end
-
-        -- Hold D-pad Up (0) for 45 frames to exit
-        if _btn(0) then
-          exit_timer = (exit_timer or 0) + 1
-          if exit_timer >= 45 then
-            should_exit = true
-            exit_timer = 0
-          end
-        else
-          exit_timer = 0
-        end
-      else
-        if btnp(4) then
-          should_exit = true
-        end
-      end
-
-      if should_exit then
+      if btnp(4) then
         stop_pitch()
         ref_playing = false
         playing_p = nil
@@ -484,12 +452,7 @@ function _update()
       local p = get_pitch(ref_v, ref_air)
       local found = find_note_by_pitch(p)
 
-      local is_playing_ref = false
-      if ref_flavor == "alt_sticky" then
-        is_playing_ref = ref_playing_alt
-      else
-        is_playing_ref = btn(5)
-      end
+      local is_playing_ref = btn(5)
 
       if is_playing_ref then
         if found then
@@ -514,9 +477,15 @@ function _update()
       end
     end
   elseif state == "quiz" then
-    if btnp(0) then user_v[1] = not user_v[1] end
-    if btnp(1) then user_v[3] = not user_v[3] end
-    if btnp(3) then user_v[2] = not user_v[2] end
+    if quiz_input_mode == "sticky" then
+      user_v[1] = btn(0)
+      user_v[3] = btn(1)
+      user_v[2] = btn(3)
+    else
+      if btnp(0) then user_v[1] = not user_v[1] end
+      if btnp(1) then user_v[3] = not user_v[3] end
+      if btnp(3) then user_v[2] = not user_v[2] end
+    end
 
     if btnp(4) then
       state = "menu"
@@ -629,7 +598,7 @@ function _draw()
     local sel_y = 38 + (menu_opt - 1) * 9
     rectfill(68, sel_y - 1, 172, sel_y + 6, 15) -- selection highlight
 
-    print("practice", 76, 38, c1)
+    print("prac: < " .. quiz_input_mode .. " >", 76, 38, c1)
     print("play-along", 76, 47, c2)
     print("ref: < " .. ref_flavor .. " >", 76, 56, c3)
     print("min air: < " .. min_air .. " >", 76, 65, c4)
@@ -640,7 +609,7 @@ function _draw()
     local arrow_x = 68 + sin(t() * 2) * 2
     print(">", arrow_x, sel_y, 8) -- selection arrow
 
-    if menu_opt <= 3 then
+    if menu_opt == 2 then
       print("press A to start", 72, 108, 1)
     else
       print("adjust: L/R or press A", 54, 108, 1)
@@ -753,7 +722,11 @@ function _draw()
 
   -- ui contextual instructions
   if state == "quiz" then
-    print("L/D/R: valves", 81, 118, 6)
+    if quiz_input_mode == "sticky" then
+      print("hold L/D/R: valves", 66, 118, 6)
+    else
+      print("L/D/R: valves", 81, 118, 6)
+    end
     print("A: submit  B: quit", 66, 126, 7)
   elseif state == "result" then
     if is_correct then
@@ -775,10 +748,6 @@ function _draw()
     elseif ref_flavor == "sticky" then
       print("hold L/D/R: valves  Up: cycle air", 21, 118, 6)
       print("A: play note  B: quit", 57, 126, 7)
-    else
-      -- alt_sticky
-      print("hold X/A/B: valves  Up: cycle air", 21, 118, 6)
-      print("hold L/D/R to play  Y: quit", 39, 126, 7)
     end
   elseif state == "play_along" then
     print("press B to exit", 75, 14, 6)
