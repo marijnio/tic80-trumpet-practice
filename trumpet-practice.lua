@@ -205,6 +205,7 @@ function _init()
   ref_air = 1
   playing_p = nil
   quiz_input_mode = "toggle"
+  valve_display_mode = "show"
 
   -- practice state variables
   score = 0
@@ -312,7 +313,7 @@ function _update()
       end
     end
     if btnp(2) then menu_opt = max(1, menu_opt - 1) end
-    if btnp(3) then menu_opt = min(7, menu_opt + 1) end
+    if btnp(3) then menu_opt = min(8, menu_opt + 1) end
 
     if menu_opt == 1 then
       if btnp(0) or btnp(1) then
@@ -341,13 +342,31 @@ function _update()
         end
       end
     elseif menu_opt == 4 then
+      if btnp(0) then
+        if valve_display_mode == "show" then
+          valve_display_mode = "reversed"
+        elseif valve_display_mode == "hidden" then
+          valve_display_mode = "show"
+        elseif valve_display_mode == "reversed" then
+          valve_display_mode = "hidden"
+        end
+      elseif btnp(1) or btnp(5) then
+        if valve_display_mode == "show" then
+          valve_display_mode = "hidden"
+        elseif valve_display_mode == "hidden" then
+          valve_display_mode = "reversed"
+        elseif valve_display_mode == "reversed" then
+          valve_display_mode = "show"
+        end
+      end
+    elseif menu_opt == 5 then
       if btnp(0) then min_air = max(1, min_air - 1) end
       if btnp(1) or btnp(5) then
         min_air = min_air + 1
         if min_air > 5 then min_air = 1 end
         if max_air < min_air then max_air = min_air end
       end
-    elseif menu_opt == 5 then
+    elseif menu_opt == 6 then
       if btnp(0) then
         max_air = max(1, max_air - 1)
         if min_air > max_air then min_air = max_air end
@@ -357,9 +376,9 @@ function _update()
         if max_air > 5 then max_air = 1 end
         if min_air > max_air then min_air = max_air end
       end
-    elseif menu_opt == 6 then
-      if btnp(0) or btnp(1) or btnp(5) then is_bb = not is_bb end
     elseif menu_opt == 7 then
+      if btnp(0) or btnp(1) or btnp(5) then is_bb = not is_bb end
+    elseif menu_opt == 8 then
       if btnp(0) then tempo = max(40, tempo - 5) end
       if btnp(1) or btnp(5) then
         tempo = tempo + 5
@@ -582,10 +601,10 @@ function _draw()
     rectfill(0, 0, 240, 12, 1) -- dark blue banner for title
     print("tic-80 trumpet trainer", 54, 4, 7)
 
-    rectfill(60, 24, 180, 104, 7) -- white paper/card menu box
-    rect(60, 24, 180, 104, 5) -- dark gray menu outline
+    rectfill(48, 16, 192, 107, 7) -- white paper/card menu box
+    rect(48, 16, 192, 107, 5) -- dark gray menu outline
 
-    print("select mode:", 84, 28, 5) -- dark gray subtitle
+    print("select mode:", 84, 20, 5) -- dark gray subtitle
 
     local c1 = menu_opt == 1 and 8 or 1
     local c2 = menu_opt == 2 and 8 or 1
@@ -594,25 +613,27 @@ function _draw()
     local c5 = menu_opt == 5 and 8 or 1
     local c6 = menu_opt == 6 and 8 or 1
     local c7 = menu_opt == 7 and 8 or 1
+    local c8 = menu_opt == 8 and 8 or 1
 
-    local sel_y = 38 + (menu_opt - 1) * 9
-    rectfill(68, sel_y - 1, 172, sel_y + 6, 15) -- selection highlight
+    local sel_y = 28 + (menu_opt - 1) * 9
+    rectfill(56, sel_y - 1, 184, sel_y + 6, 15) -- selection highlight
 
-    print("prac: < " .. quiz_input_mode .. " >", 76, 38, c1)
-    print("play-along", 76, 47, c2)
-    print("ref: < " .. ref_flavor .. " >", 76, 56, c3)
-    print("min air: < " .. min_air .. " >", 76, 65, c4)
-    print("max air: < " .. max_air .. " >", 76, 74, c5)
-    print("trumpet: < " .. (is_bb and "bB" or "c") .. " >", 76, 83, c6)
-    print("tempo: < " .. tempo .. " > bpm", 76, 92, c7)
+    print("prac: < " .. quiz_input_mode .. " >", 64, 28, c1)
+    print("play-along", 64, 37, c2)
+    print("ref: < " .. ref_flavor .. " >", 64, 46, c3)
+    print("valves: < " .. valve_display_mode .. " >", 64, 55, c4)
+    print("min air: < " .. min_air .. " >", 64, 64, c5)
+    print("max air: < " .. max_air .. " >", 64, 73, c6)
+    print("trumpet: < " .. (is_bb and "bB" or "c") .. " >", 64, 82, c7)
+    print("tempo: < " .. tempo .. " > bpm", 64, 91, c8)
 
-    local arrow_x = 68 + sin(t() * 2) * 2
+    local arrow_x = 56 + sin(t() * 2) * 2
     print(">", arrow_x, sel_y, 8) -- selection arrow
 
     if menu_opt == 2 then
-      print("press A to start", 72, 108, 1)
+      print("press A to start", 72, 110, 1)
     else
-      print("adjust: L/R or press A", 54, 108, 1)
+      print("adjust: L/R or press A", 54, 110, 1)
     end
     draw_elephant(216, 126, true, true, true)
     return
@@ -789,6 +810,11 @@ function _draw()
 end
 
 function draw_valves(start_x, y)
+  local is_exercise = (state == "quiz" or state == "result" or state == "play_along")
+  if is_exercise and valve_display_mode == "hidden" then
+    return
+  end
+
   local draw_note = nil
   if state == "reference" then
     if ref_flavor == "list" then
@@ -828,8 +854,9 @@ function draw_valves(start_x, y)
     end
   end
 
-  for i = 1, 3 do
-    local vx = start_x + (i - 1) * 24
+  for step = 1, 3 do
+    local vx = start_x + (step - 1) * 24
+    local i = (is_exercise and valve_display_mode == "reversed") and (4 - step) or step
     local active = user_v[i]
     if state == "reference" then
       if ref_flavor == "list" then
@@ -842,8 +869,9 @@ function draw_valves(start_x, y)
     end
 
     -- draw slides
-    if i == 1 then
-      if slide_1_out then
+    if step == 1 then
+      local slide_out = (is_exercise and valve_display_mode == "reversed") and slide_3_out or slide_1_out
+      if slide_out then
         rectfill(vx - 14, y + 2, vx - 3, y + 9, 6) -- extended slide (light gray)
         rect(vx - 14, y + 2, vx - 3, y + 9, 5) -- dark outline
         rectfill(vx - 12, y + 4, vx - 3, y + 7, 1) -- hollow center (bg)
@@ -853,8 +881,9 @@ function draw_valves(start_x, y)
         rect(vx - 8, y + 2, vx - 3, y + 9, 0) -- black outline
         rectfill(vx - 6, y + 4, vx - 3, y + 7, 1) -- hollow center (bg)
       end
-    elseif i == 3 then
-      if slide_3_out then
+    elseif step == 3 then
+      local slide_out = (is_exercise and valve_display_mode == "reversed") and slide_1_out or slide_3_out
+      if slide_out then
         rectfill(vx + 11, y + 2, vx + 22, y + 9, 6) -- extended slide (light gray)
         rect(vx + 11, y + 2, vx + 22, y + 9, 5) -- dark outline
         rectfill(vx + 11, y + 4, vx + 20, y + 7, 1) -- hollow center (bg)

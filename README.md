@@ -16,6 +16,10 @@ This tool helps trumpet players practice **valve fingerings** and associate them
 * **Smart Repetition (Practice Mode):** Utilizes a lightweight Spaced Repetition System (SRS) with a live mastery percentage display (e.g. `srs: 83%`). Incorrectly answered notes double in weight (making them appear more frequently), while correct answers halve in weight to prevent redundant drill.
   * *Ear Training on Mistake:* If you submit an incorrect fingering, the trainer plays a short failure chime and then sounds the correct trumpet pitch for exactly **half a measure** (calculated dynamically based on your menu tempo setting) to help train your ear before stopping automatically.
 * **Randomized progression (Play-Along Mode):** Notes are chosen randomly from the selection pool to provide a diverse, hands-free playing session.
+* **Customizable Valve Display:** A setting in the main menu controls how valves are shown during exercises:
+  * **Show:** Default layout showing valves as `1-2-3` from left to right.
+  * **Hidden:** Hides the valve indicators during practice/exercises to test pure muscle memory by feel.
+  * **Reversed:** Reverses the visual layout of the valves to `3-2-1` (with matching flipped slide representations) for players who prefer that view.
 * **Three Flexible Modes:** 
   * **Quiz Mode (Practice):** Tests your recall of valve fingerings. The target air pressure level is automatically shown as a reference, letting you focus entirely on correct fingerings. You can select between two input options on the menu:
     * **Toggle Mode:** Direction buttons toggle the valves on/off.
