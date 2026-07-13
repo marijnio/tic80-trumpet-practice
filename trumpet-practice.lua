@@ -810,9 +810,20 @@ function _draw()
 end
 
 function draw_valves(start_x, y)
+  local reveal = true
+  if state == "play_along" then
+    local beat_len = flr(3600 / tempo)
+    local beat = flr(play_along_timer / beat_len) + 1
+    if beat <= 8 then
+      reveal = false
+    end
+  end
+
   local is_exercise = (state == "quiz" or state == "result" or state == "play_along")
   if is_exercise and valve_display_mode == "hidden" then
-    return
+    if state == "quiz" or (state == "play_along" and not reveal) then
+      return
+    end
   end
 
   local draw_note = nil
@@ -825,15 +836,6 @@ function draw_valves(start_x, y)
     end
   else
     draw_note = note
-  end
-
-  local reveal = true
-  if state == "play_along" then
-    local beat_len = flr(3600 / tempo)
-    local beat = flr(play_along_timer / beat_len) + 1
-    if beat <= 8 then
-      reveal = false
-    end
   end
 
   local slide_1_out = false
