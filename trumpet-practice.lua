@@ -519,11 +519,9 @@ function _update()
       if valves_correct then
         is_correct = true
         score = score + 1
-        sfx(0)
         note.w = max(0.2, note.w * 0.5)
       else
         is_correct = false
-        sfx(1)
         note.w = min(5, note.w * 2)
       end
       local p = is_bb and note.p - 2 or note.p
