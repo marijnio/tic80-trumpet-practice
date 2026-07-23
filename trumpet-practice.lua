@@ -218,6 +218,8 @@ function _init()
 
   -- play-along state variables
   play_along_timer = 0
+  play_along_flavor = "audio"
+  play_along_hit = false
   failed = false
 
   -- difficulty ranges
@@ -323,6 +325,14 @@ function _update()
           quiz_input_mode = "toggle"
         end
       end
+    elseif menu_opt == 2 then
+      if btnp(0) or btnp(1) then
+        if play_along_flavor == "audio" then
+          play_along_flavor = "buttons"
+        else
+          play_along_flavor = "audio"
+        end
+      end
     elseif menu_opt == 3 then
       if btnp(0) then
         if ref_flavor == "list" then
@@ -397,6 +407,8 @@ function _update()
         score = 0
         total = 0
         play_along_timer = 0
+        play_along_hit = false
+        is_correct = false
         failed = false
         pick_new_note()
       elseif menu_opt == 3 then
@@ -555,29 +567,63 @@ function _update()
       return
     end
 
+    if play_along_flavor == "buttons" then
+      user_v[1] = btn(0)
+      user_v[3] = btn(1)
+      user_v[2] = btn(3)
+    end
+
     -- TIC-80 is 60 FPS, so we use 3600 frames per beat
     local beat_len = flr(3600 / tempo)
     local cycle_len = beat_len * 12
 
+    local beat = flr(play_along_timer / beat_len) + 1
+
+    if play_along_flavor == "buttons" and beat >= 5 and beat <= 8 then
+      if user_v[1] == note.v[1] and user_v[2] == note.v[2] and user_v[3] == note.v[3] then
+        play_along_hit = true
+      end
+    end
+
     if play_along_timer % beat_len == 0 then
-      local beat = flr(play_along_timer / beat_len) + 1
       play_click()
 
-      if beat == 5 then
+      if beat == 1 then
+        play_along_hit = false
+        is_correct = false
+      elseif beat == 5 then
         local p = is_bb and note.p - 2 or note.p
         play_pitch(p)
       elseif beat == 9 then
         stop_pitch()
+        if play_along_flavor == "buttons" then
+          total = total + 1
+          is_correct = play_along_hit
+          if is_correct then
+            score = score + 1
+            note.w = max(0.2, note.w * 0.5)
+            sfx(0, 1)
+          else
+            sfx(1, 1)
+            local p = is_bb and note.p - 2 or note.p
+            play_pitch(p)
+            note.w = min(5, note.w * 2)
+          end
+        end
       end
     end
 
     play_along_timer = play_along_timer + 1
 
     if play_along_timer >= cycle_len then
-      score = score + 1
-      total = total + 1
+      if play_along_flavor == "audio" then
+        score = score + 1
+        total = total + 1
+      end
+      stop_pitch()
 
       play_along_timer = 0
+      play_along_hit = false
       pick_new_note()
     end
   end
@@ -617,7 +663,7 @@ function _draw()
     rectfill(56, sel_y - 1, 184, sel_y + 6, 15) -- selection highlight
 
     print("prac: < " .. quiz_input_mode .. " >", 64, 28, c1)
-    print("play-along", 64, 37, c2)
+    print("play-along: < " .. play_along_flavor .. " >", 64, 37, c2)
     print("ref: < " .. ref_flavor .. " >", 64, 46, c3)
     print("valves: < " .. valve_display_mode .. " >", 64, 55, c4)
     print("min air: < " .. min_air .. " >", 64, 64, c5)
@@ -628,11 +674,7 @@ function _draw()
     local arrow_x = 56 + sin(t() * 2) * 2
     print(">", arrow_x, sel_y, 8) -- selection arrow
 
-    if menu_opt == 2 then
-      print("press A to start", 72, 110, 1)
-    else
-      print("adjust: L/R or press A", 54, 110, 1)
-    end
+    print("adjust: L/R or press A", 54, 110, 1)
     draw_elephant(216, 126, true, true, true)
     return
   end
@@ -648,7 +690,7 @@ function _draw()
     print("reference", 180, 4, 10)
   end
 
-  if state == "quiz" or state == "result" then
+  if state == "quiz" or state == "result" or (state == "play_along" and play_along_flavor == "buttons") then
     local mastery = flr(100 * (5 - note.w) / 4.8)
     print("srs: " .. mastery .. "%", 4, 16, 6)
   end
@@ -728,6 +770,14 @@ function _draw()
     if beat >= 5 and beat <= 8 then
       happy = true
       playing = true
+    elseif beat > 8 then
+      if play_along_flavor == "buttons" then
+        happy = is_correct
+        playing = true
+      else
+        happy = true
+        playing = true
+      end
     end
     -- bounce and sway dance to the beat!
     local phase = (play_along_timer % beat_len) / beat_len
@@ -769,7 +819,11 @@ function _draw()
       print("A: play note  B: quit", 57, 126, 7)
     end
   elseif state == "play_along" then
-    print("press B to exit", 75, 14, 6)
+    if play_along_flavor == "buttons" then
+      print("hold L/D/R: valves  B: quit", 36, 14, 6)
+    else
+      print("press B to exit", 75, 14, 6)
+    end
 
     local beat_len = flr(3600 / tempo)
     local beat = flr(play_along_timer / beat_len) + 1
@@ -788,8 +842,18 @@ function _draw()
       banner_col = 10
       text = "play!"
     elseif phase_name == "reveal" then
-      banner_col = 11
-      text = "revealed"
+      if play_along_flavor == "buttons" then
+        if is_correct then
+          banner_col = 11
+          text = "correct!"
+        else
+          banner_col = 8
+          text = "wrong!"
+        end
+      else
+        banner_col = 11
+        text = "revealed"
+      end
     end
 
     rectfill(0, 116, 240, 136, banner_col)

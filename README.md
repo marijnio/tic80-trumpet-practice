@@ -24,7 +24,9 @@ This tool helps trumpet players practice **valve fingerings** and associate them
   * **Quiz Mode (Practice):** Tests your recall of valve fingerings. The target air pressure level is automatically shown as a reference, letting you focus entirely on correct fingerings. You can select between two input options on the menu:
     * **Toggle Mode:** Direction buttons toggle the valves on/off.
     * **Sticky Mode:** Valves are held down in real-time. Hold down the valves and press A to submit your answer.
-  * **Play-Along Mode (Hands-Free):** Specifically designed for practicing with your **actual trumpet** in hand. It guides you rhythmically using audio metronome clicks and pitches.
+  * **Play-Along Mode:** Guides you rhythmically through randomized notes using metronome clicks and pitches. You can choose between two flavors on the main menu:
+    * **Audio (Hands-Free):** Designed for practicing with your **actual trumpet** in hand listening to audio reference tones.
+    * **Buttons (Interactive Challenge):** Hold down valve buttons on beat (same sticky inputs as practice mode) and receive instant correct/wrong feedback, sfx, SRS score tracking, and ear training pitch reveal.
   * **Reference Mode:** Allows you to browse through notes or explore combinations. You can choose between three flavors on the main menu:
     * **List Flavor:** Chronologically browse through all 26 notes from low to high to review correct fingerings and air levels.
     * **Valves Flavor:** Actively configure the valves and air levels to explore sound pitches interactively (taps toggle valves on/off).
