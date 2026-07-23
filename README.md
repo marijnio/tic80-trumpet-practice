@@ -18,7 +18,7 @@ This tool helps trumpet players practice **valve fingerings** and associate them
 * **Randomized progression (Play-Along Mode):** Notes are chosen randomly from the selection pool to provide a diverse, hands-free playing session.
 * **Customizable Valve Display:** A setting in the main menu controls how valves are shown during exercises:
   * **Show:** Default layout showing valves as `1-2-3` from left to right.
-  * **Hidden:** Hides the valve indicators during practice/exercises to test pure muscle memory by feel.
+  * **Hide:** Hides the valve indicators during practice/exercises to test pure muscle memory by feel (applies in Sticky Mode; in Toggle Mode, valves remain visible so active toggle states can be seen).
   * **Reversed:** Reverses the visual layout of the valves to `3-2-1` (with matching flipped slide representations) for players who prefer that view.
 * **Three Flexible Modes:** 
   * **Quiz Mode (Practice):** Tests your recall of valve fingerings. The target air pressure level is automatically shown as a reference, letting you focus entirely on correct fingerings. You can select between two input options on the menu:

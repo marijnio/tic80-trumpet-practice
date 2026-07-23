@@ -345,15 +345,15 @@ function _update()
       if btnp(0) then
         if valve_display_mode == "show" then
           valve_display_mode = "reversed"
-        elseif valve_display_mode == "hidden" then
+        elseif valve_display_mode == "hide" then
           valve_display_mode = "show"
         elseif valve_display_mode == "reversed" then
-          valve_display_mode = "hidden"
+          valve_display_mode = "hide"
         end
       elseif btnp(1) or btnp(5) then
         if valve_display_mode == "show" then
-          valve_display_mode = "hidden"
-        elseif valve_display_mode == "hidden" then
+          valve_display_mode = "hide"
+        elseif valve_display_mode == "hide" then
           valve_display_mode = "reversed"
         elseif valve_display_mode == "reversed" then
           valve_display_mode = "show"
@@ -818,7 +818,7 @@ function draw_valves(start_x, y)
   end
 
   local is_exercise = (state == "quiz" or state == "result" or state == "play_along")
-  if is_exercise and valve_display_mode == "hidden" then
+  if is_exercise and valve_display_mode == "hide" and quiz_input_mode ~= "toggle" then
     if state == "quiz" or (state == "play_along" and not reveal) then
       return
     end
@@ -856,7 +856,7 @@ function draw_valves(start_x, y)
 
   for step = 1, 3 do
     local vx = start_x + (step - 1) * 24
-    local i = (is_exercise and valve_display_mode == "reversed") and (4 - step) or step
+    local i = (valve_display_mode == "reversed") and (4 - step) or step
     local active = user_v[i]
     if state == "reference" then
       if ref_flavor == "list" then
@@ -870,7 +870,7 @@ function draw_valves(start_x, y)
 
     -- draw slides
     if step == 1 then
-      local slide_out = (is_exercise and valve_display_mode == "reversed") and slide_3_out or slide_1_out
+      local slide_out = (valve_display_mode == "reversed") and slide_3_out or slide_1_out
       if slide_out then
         rectfill(vx - 14, y + 2, vx - 3, y + 9, 6) -- extended slide (light gray)
         rect(vx - 14, y + 2, vx - 3, y + 9, 5) -- dark outline
@@ -882,7 +882,7 @@ function draw_valves(start_x, y)
         rectfill(vx - 6, y + 4, vx - 3, y + 7, 1) -- hollow center (bg)
       end
     elseif step == 3 then
-      local slide_out = (is_exercise and valve_display_mode == "reversed") and slide_1_out or slide_3_out
+      local slide_out = (valve_display_mode == "reversed") and slide_1_out or slide_3_out
       if slide_out then
         rectfill(vx + 11, y + 2, vx + 22, y + 9, 6) -- extended slide (light gray)
         rect(vx + 11, y + 2, vx + 22, y + 9, 5) -- dark outline
