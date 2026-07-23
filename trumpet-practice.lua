@@ -226,7 +226,7 @@ function _init()
   min_air = 1
   max_air = 2
   is_bb = true
-  tempo = 80
+  tempo = 120
 
   -- database of notes (f#3 to g5)
   -- y: standard treble clef positioning (F5 = 24, E4 = 56)
@@ -389,10 +389,10 @@ function _update()
     elseif menu_opt == 7 then
       if btnp(0) or btnp(1) or btnp(5) then is_bb = not is_bb end
     elseif menu_opt == 8 then
-      if btnp(0) then tempo = max(40, tempo - 5) end
+      if btnp(0) then tempo = max(60, tempo - 10) end
       if btnp(1) or btnp(5) then
-        tempo = tempo + 5
-        if tempo > 120 then tempo = 40 end
+        tempo = tempo + 10
+        if tempo > 180 then tempo = 60 end
       end
     end
 
