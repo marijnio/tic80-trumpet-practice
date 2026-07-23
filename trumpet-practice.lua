@@ -389,10 +389,13 @@ function _update()
     elseif menu_opt == 7 then
       if btnp(0) or btnp(1) or btnp(5) then is_bb = not is_bb end
     elseif menu_opt == 8 then
-      if btnp(0) then tempo = max(60, tempo - 10) end
+      if btnp(0) then
+        tempo = tempo - 10
+        if tempo < 80 then tempo = 200 end
+      end
       if btnp(1) or btnp(5) then
         tempo = tempo + 10
-        if tempo > 180 then tempo = 60 end
+        if tempo > 200 then tempo = 80 end
       end
     end
 
